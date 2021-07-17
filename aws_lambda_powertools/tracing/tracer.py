@@ -5,7 +5,7 @@ import inspect
 import logging
 import numbers
 import os
-from typing import Any, Awaitable, Callable, Dict, Optional, Sequence, TypeVar, Union, cast, overload
+from typing import Any, Callable, Dict, Optional, Sequence, TypeVar, Union, cast, overload
 
 from ..shared import constants
 from ..shared.functions import resolve_env_var_choice, resolve_truthy_env_var_choice
@@ -16,10 +16,9 @@ is_cold_start = True
 logger = logging.getLogger(__name__)
 
 aws_xray_sdk = LazyLoader(constants.XRAY_SDK_MODULE, globals(), constants.XRAY_SDK_MODULE)
-aws_xray_sdk.core = LazyLoader(constants.XRAY_SDK_CORE_MODULE, globals(), constants.XRAY_SDK_CORE_MODULE)
+aws_xray_sdk.core = LazyLoader(constants.XRAY_SDK_CORE_MODULE, globals(), constants.XRAY_SDK_CORE_MODULE)  # type: ignore # noqa: E501
 
 AnyCallableT = TypeVar("AnyCallableT", bound=Callable[..., Any])  # noqa: VNE001
-AnyAwaitableT = TypeVar("AnyAwaitableT", bound=Awaitable)
 
 
 class Tracer:
@@ -536,13 +535,7 @@ class Tracer:
                 method=method, capture_response=capture_response, capture_error=capture_error, method_name=method_name
             )
 
-    def _decorate_async_function(
-        self,
-        method: Callable,
-        capture_response: Optional[Union[bool, str]] = None,
-        capture_error: Optional[Union[bool, str]] = None,
-        method_name: Optional[str] = None,
-    ):
+    def _decorate_async_function(self, method: Callable, method_name: str, capture_response: bool, capture_error: bool):
         @functools.wraps(method)
         async def decorate(*args, **kwargs):
             async with self.provider.in_subsegment_async(name=f"## {method_name}") as subsegment:
@@ -678,7 +671,7 @@ class Tracer:
         method_name: str,
         error: Exception,
         subsegment: BaseSegment,
-        capture_error: Optional[bool] = None,
+        capture_error: bool,
     ):
         """Add full exception object as metadata for given subsegment
 
