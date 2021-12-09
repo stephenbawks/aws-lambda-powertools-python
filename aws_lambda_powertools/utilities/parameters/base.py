@@ -44,7 +44,7 @@ class BaseProvider(ABC):
         transform: Optional[str] = None,
         force_fetch: bool = False,
         **sdk_options,
-    ) -> Union[str, list, dict, bytes]:
+    ) -> Union[str, list, dict, bytes, None]:
         """
         Retrieve a parameter value or return the cached value
 
@@ -95,11 +95,13 @@ class BaseProvider(ABC):
         if transform is not None:
             if isinstance(value, bytes):
                 value = value.decode("utf-8")
-            value = transform_value(value, transform)
-
-        self.store[key] = ExpirableValue(value, datetime.now() + timedelta(seconds=max_age))
-
-        return value
+            transformed_value = transform_value(value, transform)
+            if transformed_value is not None:
+                self.store[key] = ExpirableValue(transformed_value, datetime.now() + timedelta(seconds=max_age))
+            return transformed_value
+        else:
+            self.store[key] = ExpirableValue(value, datetime.now() + timedelta(seconds=max_age))
+            return value
 
     @abstractmethod
     def _get(self, name: str, **sdk_options) -> Union[str, bytes]:
