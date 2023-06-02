@@ -13,11 +13,11 @@ class VPCLatticeResolver(ApiGatewayResolver):
 
     Notes:
     -----
-    Lambda Function URL follows the API Gateway HTTP APIs Payload Format Version 2.0.
+    Invokes your Lambda function and passes the content of the request to the Lambda function, in JSON format
 
     Documentation:
-    - https://docs.aws.amazon.com/lambda/latest/dg/urls-configuration.html
-    - https://docs.aws.amazon.com/lambda/latest/dg/urls-invocation.html#urls-payloads
+    - https://docs.aws.amazon.com/vpc-lattice/latest/ug/lambda-functions.html
+
 
     Examples
     --------
@@ -25,10 +25,10 @@ class VPCLatticeResolver(ApiGatewayResolver):
 
     ```python
     from aws_lambda_powertools import Tracer
-    from aws_lambda_powertools.event_handler import LambdaFunctionUrlResolver
+    from aws_lambda_powertools.event_handler import VPCLatticeResolver
 
     tracer = Tracer()
-    app = LambdaFunctionUrlResolver()
+    app = VPCLatticeResolver()
 
     @app.get("/get-call")
     def simple_get():
