@@ -2,13 +2,13 @@ from typing import Callable, Dict, List, Optional
 
 from aws_lambda_powertools.event_handler import CORSConfig
 from aws_lambda_powertools.event_handler.api_gateway import (
-    VPCLatticeEvent,
+    ApiGatewayResolver,
     ProxyEventType,
 )
-from aws_lambda_powertools.utilities.data_classes import LambdaFunctionUrlEvent
+from aws_lambda_powertools.utilities.data_classes import VPCLatticeEvent
 
 
-class LambdaFunctionUrlResolver(VPCLatticeEvent):
+class VPCLatticeResolver(ApiGatewayResolver):
     """AWS Lambda Function URL resolver
 
     Notes:

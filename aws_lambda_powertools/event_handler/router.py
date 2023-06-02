@@ -4,6 +4,7 @@ from aws_lambda_powertools.utilities.data_classes import (
     APIGatewayProxyEvent,
     APIGatewayProxyEventV2,
     LambdaFunctionUrlEvent,
+    VPCLatticeEvent,
 )
 
 
@@ -29,3 +30,8 @@ class ALBRouter(Router):
     """Specialized Router class that exposes current_event as an ALBEvent"""
 
     current_event: ALBEvent
+
+class VPCLatticeRouter(Router):
+    """Specialized Router class that exposes current_event as an VPCLatticeEvent"""
+
+    current_event: VPCLatticeEvent
