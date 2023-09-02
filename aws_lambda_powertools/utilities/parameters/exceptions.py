@@ -9,3 +9,6 @@ class GetParameterError(Exception):
 
 class TransformParameterError(Exception):
     """When a provider fails to transform a parameter value"""
+
+class SetParameterError(Exception):
+    """When a provider raises an exception on parameter retrieval"""
